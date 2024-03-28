@@ -59,4 +59,17 @@ public class DanhMucRepository {
         }
         session.close();
     }
+
+    public void update(DanhMuc dm){
+        session = HibernateUtils.getFACTORY().openSession();
+        Transaction transaction = session.beginTransaction();
+        try {
+            session.update(dm);
+            transaction.commit();
+        } catch (Exception e){
+            e.printStackTrace();
+            transaction.rollback();
+        }
+        session.close();
+    }
 }

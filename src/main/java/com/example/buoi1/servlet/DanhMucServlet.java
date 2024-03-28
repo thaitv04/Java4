@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.List;
 
 @WebServlet(name = "DanhMucServlet", value = {"/danh-muc/hien-thi", "/danh-muc/add",
-                "/danh-muc/delete"})
+                "/danh-muc/delete", "/danh-muc/detail", "/danh-muc/update"})
 public class DanhMucServlet extends HttpServlet {
 
     private DanhMucRepository danhMucRepository = new DanhMucRepository();
@@ -24,8 +24,22 @@ public class DanhMucServlet extends HttpServlet {
             this.hienThi(request,response);
         } else if (uri.equals("/danh-muc/delete")) {
             this.delete(request,response);
+        } else if (uri.contains("/detail")) {
+            this.detail(request,response);
         }
 
+    }
+
+    private void detail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String ma = request.getParameter("maSP");
+        DanhMuc danhMucDetail = danhMucRepository.getDetail(ma);
+        for (DanhMuc danhMuc : listDanhMuc){
+            if (danhMuc.getMa().equals("ma")){
+                danhMucDetail = danhMuc;
+            }
+        }
+        request.setAttribute("danhMucDetail", danhMucDetail);
+        request.getRequestDispatcher("/danh-muc/chi-tiet.jsp").forward(request,response);
     }
 
     private void delete(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -49,8 +63,26 @@ public class DanhMucServlet extends HttpServlet {
         String uri = request.getRequestURI();
         if (uri.equals("/danh-muc/add")){
             this.add(request, response);
+        } else if (uri.contains("/update")){
+            this.update(request,response);
         }
 
+    }
+
+    private void update(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String ma = request.getParameter("maSP");
+        String ten = request.getParameter("ten");
+        String trangThai = request.getParameter("trangThai");
+        for (DanhMuc danhMuc : listDanhMuc){
+            if (danhMuc.getMa().equals(ma)){
+                    danhMuc.setTen(ten);
+                    danhMuc.setTrangThai(trangThai);
+                    danhMuc.setNgayTao(new Date());
+                    danhMuc.setNgaySua(new Date());
+            }
+        }
+//        danhMucRepository.update());
+        response.sendRedirect("/danh-muc/hien-thi");
     }
 
     private void add(HttpServletRequest request, HttpServletResponse response) throws IOException {

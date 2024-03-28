@@ -59,7 +59,7 @@
             <td>${d.ngaySua}</td>
             <td>
                 <a href="/danh-muc/delete?maSP=${d.ma}" class="btn btn-danger">Delete</a>
-                <a href="" class="btn btn-info">Detail</a>
+                <a href="/danh-muc/detail?maSP=${d.ma}" class="btn btn-info">Detail</a>
             </td>
         </tr>
     </c:forEach>
